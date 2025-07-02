@@ -1,0 +1,344 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gourmet Haven Restaurant</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+        
+            --primary: #6C63FF;
+            --secondary: #F9A826;
+            --bg: #F4F6FB;
+            --card-bg: #fff;
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --radius: 22px;
+            --gradient: linear-gradient(135deg, #6C63FF 0%, #F9A826 100%);
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background: var(--bg);
+            color: #222;
+        }
+        header {
+            background: var(--gradient);
+            color: #fff;
+            padding: 28px 0 18px 0;
+            box-shadow: var(--shadow);
+            border-radius: 0 0 var(--radius) var(--radius);
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 36px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 10px 18px;
+            border-radius: var(--radius);
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+        nav a:hover, nav a.active {
+            background: rgba(255,255,255,0.13);
+            box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.10);
+            transform: translateY(-2px) scale(1.04);
+        }
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: var(--card-bg);
+            padding: 38px 32px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            min-height: 600px;
+        }
+        h1, h2 {
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        h3 {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+        /* 3D Figma-style menu cards */
+        .menu-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 36px;
+            justify-content: center;
+        }
+        .menu-item {
+            flex: 1 1 240px;
+            background: var(--card-bg);
+            padding: 28px 22px;
+            border-radius: var(--radius);
+            box-shadow: 0 8px 32px 0 rgba(108, 99, 255, 0.18), 0 1.5px 4px 0 rgba(0,0,0,0.04);
+            transition: transform 0.25s cubic-bezier(.17,.67,.83,.67), box-shadow 0.25s;
+            position: relative;
+            z-index: 1;
+            min-width: 220px;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .menu-item:hover {
+            transform: translateY(-12px) scale(1.04) rotateY(4deg);
+            box-shadow: 0 16px 48px 0 rgba(108, 99, 255, 0.25), 0 3px 12px 0 rgba(0,0,0,0.07);
+        }
+        .menu-item strong {
+            margin-top: auto;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+        /* Interactive forms */
+        form input, form select, form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border-radius: 12px;
+            border: 1.5px solid #e0e0e0;
+            font-size: 1rem;
+            background: #f7f7fa;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        form input:focus, form select:focus, form textarea:focus {
+            border: 1.5px solid var(--primary);
+            box-shadow: 0 2px 8px 0 rgba(108, 99, 255, 0.10);
+            outline: none;
+        }
+        button {
+            background: var(--gradient);
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px 0 rgba(108, 99, 255, 0.10);
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #F9A826 0%, #6C63FF 100%);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 4px 16px 0 rgba(249, 168, 38, 0.13);
+        }
+        .dashboard {
+            display: none;
+        }
+        .dashboard.active {
+            display: block;
+        }
+        .dashboard-section {
+            margin-bottom: 36px;
+            background: #f7f7fa;
+            padding: 22px 18px;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px 0 rgba(108, 99, 255, 0.07);
+        }
+        .dashboard-section button {
+            margin-top: 10px;
+        }
+        /* Animated feedback */
+        .feedback {
+            display: none;
+            margin-bottom: 16px;
+            color: var(--secondary);
+            font-weight: 700;
+            animation: fadeIn 0.7s;
+        }
+        .feedback.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        /* Responsive */
+        @media (max-width: 800px) {
+            .container { padding: 12px; }
+            .menu-items { flex-direction: column; gap: 18px; }
+            nav { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="#home" onclick="showSection('home', this)" class="active">Home</a>
+            <a href="#about" onclick="showSection('about', this)">About</a>
+            <a href="#menu" onclick="showSection('menu', this)">Menu</a>
+            <a href="#contact" onclick="showSection('contact', this)">Contact</a>
+            <a href="#reservation" onclick="showSection('reservation', this)">Reservation</a>
+            <a href="#dashboard" onclick="showSection('dashboard', this)">Dashboard</a>
+        </nav>
+    </header>
+    <div class="container">
+        <section id="home">
+            <h1>Welcome to Gourmet Haven</h1>
+            <p>Experience fine dining with a blend of classic and contemporary cuisine. Enjoy a memorable meal in a warm, elegant atmosphere.</p>
+            <button onclick="showSection('reservation', document.querySelector('nav a[href=\'#reservation\']'))">Book a Table</button>
+        </section>
+        <section id="about" style="display:none;">
+            <h2>About Us</h2>
+            <p>Gourmet Haven has been serving culinary delights since 2005. Our chefs use the freshest ingredients to craft dishes that delight your senses. We pride ourselves on exceptional service and a welcoming ambiance.</p>
+            <button onclick="showSection('menu', document.querySelector('nav a[href=\'#menu\']'))">See Our Menu</button>
+        </section>
+        <section id="menu" style="display:none;">
+            <h2>Our Menu</h2>
+            <div class="menu-items">
+                <div class="menu-item" tabindex="0" onclick="showMenuFeedback('Grilled Salmon')">
+                    <h3>Grilled Salmon</h3>
+                    <p>Fresh salmon fillet grilled to perfection, served with seasonal vegetables.</p>
+                    <strong>$22</strong>
+                </div>
+                <div class="menu-item" tabindex="0" onclick="showMenuFeedback('Classic Caesar Salad')">
+                    <h3>Classic Caesar Salad</h3>
+                    <p>Crisp romaine, parmesan, croutons, and our signature Caesar dressing.</p>
+                    <strong>$12</strong>
+                </div>
+                <div class="menu-item" tabindex="0" onclick="showMenuFeedback('Filet Mignon')">
+                    <h3>Filet Mignon</h3>
+                    <p>Prime beef tenderloin, mashed potatoes, and red wine reduction.</p>
+                    <strong>$32</strong>
+                </div>
+                <div class="menu-item" tabindex="0" onclick="showMenuFeedback('Vegetarian Pasta')">
+                    <h3>Vegetarian Pasta</h3>
+                    <p>Penne pasta tossed with fresh vegetables and basil pesto.</p>
+                    <strong>$16</strong>
+                </div>
+            </div>
+            <div id="menu-feedback" class="feedback"></div>
+        </section>
+        <section id="contact" style="display:none;">
+            <h2>Contact Us</h2>
+            <form onsubmit="showContactFeedback(event)">
+                <label for="name">Name</label>
+                <input id="name" type="text" required>
+                <label for="email">Email</label>
+                <input id="email" type="email" required>
+                <label for="message">Message</label>
+                <textarea id="message" rows="4" required></textarea>
+                <button type="submit">Send Message</button>
+                <div id="contact-feedback" class="feedback"></div>
+            </form>
+        </section>
+        <section id="reservation" style="display:none;">
+            <h2>Make a Reservation</h2>
+            <form onsubmit="showReservationFeedback(event)">
+                <label for="res-name">Name</label>
+                <input id="res-name" type="text" required>
+                <label for="res-date">Date</label>
+                <input id="res-date" type="date" required>
+                <label for="res-time">Time</label>
+                <input id="res-time" type="time" required>
+                <label for="res-guests">Number of Guests</label>
+                <input id="res-guests" type="number" min="1" max="20" required>
+                <button type="submit">Book Table</button>
+                <div id="reservation-feedback" class="feedback"></div>
+            </form>
+        </section>
+        <section id="dashboard" class="dashboard" style="display:none;">
+            <h2>Customer Dashboard</h2>
+            <div class="dashboard-section">
+                <h3>Account Balance</h3>
+                <p>Your current balance: <strong id="balance">$50.00</strong></p>
+                <button onclick="addFunds()">Add Funds</button>
+                <div id="funds-feedback" class="feedback"></div>
+            </div>
+            <div class="dashboard-section">
+                <h3>Track Delivery</h3>
+                <p>Order Status: <span id="delivery-status">Preparing</span></p>
+                <button onclick="updateDelivery()">Update Status</button>
+            </div>
+            <div class="dashboard-section">
+                <h3>Payment Method</h3>
+                <form onsubmit="updatePayment(event)">
+                    <label for="payment-method">Select Payment Method</label>
+                    <select id="payment-method">
+                        <option>Credit Card</option>
+                        <option>PayPal</option>
+                        <option>Apple Pay</option>
+                    </select>
+                    <button type="submit">Update</button>
+                </form>
+                <p>Current: <span id="current-payment">Credit Card</span></p>
+                <div id="payment-feedback" class="feedback"></div>
+            </div>
+        </section>
+    </div>
+    <script>
+        // Navigation and section switching
+        function showSection(section, navLink) {
+            const sections = ['home', 'about', 'menu', 'contact', 'reservation', 'dashboard'];
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = (id === section) ? 'block' : 'none';
+            });
+            // Update nav active state
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            if (navLink) navLink.classList.add('active');
+        }
+        // Figma-style menu card feedback
+        function showMenuFeedback(item) {
+            const feedback = document.getElementById('menu-feedback');
+            feedback.textContent = `You selected "${item}".`;
+            feedback.classList.add('active');
+            setTimeout(() => feedback.classList.remove('active'), 1500);
+        }
+        // Contact form feedback
+        function showContactFeedback(e) {
+            e.preventDefault();
+            const feedback = document.getElementById('contact-feedback');
+            feedback.textContent = "Thank you for reaching out! We'll get back to you soon.";
+            feedback.classList.add('active');
+            setTimeout(() => feedback.classList.remove('active'), 2000);
+            e.target.reset();
+        }
+        // Reservation form feedback
+        function showReservationFeedback(e) {
+            e.preventDefault();
+            const feedback = document.getElementById('reservation-feedback');
+            feedback.textContent = "Reservation received! We'll confirm via email.";
+            feedback.classList.add('active');
+            setTimeout(() => feedback.classList.remove('active'), 2000);
+            e.target.reset();
+        }
+        // Dashboard interactivity
+        let balance = 50.00;
+        function addFunds() {
+            balance += 20;
+            document.getElementById('balance').textContent = `$${balance.toFixed(2)}`;
+            const feedback = document.getElementById('funds-feedback');
+            feedback.textContent = "Funds added!";
+            feedback.classList.add('active');
+            setTimeout(() => feedback.classList.remove('active'), 1200);
+        }
+        const deliveryStages = ['Preparing', 'Out for Delivery', 'Delivered'];
+        let deliveryIndex = 0;
+        function updateDelivery() {
+            deliveryIndex = (deliveryIndex + 1) % deliveryStages.length;
+            document.getElementById('delivery-status').textContent = deliveryStages[deliveryIndex];
+        }
+        function updatePayment(e) {
+            e.preventDefault();
+            const method = document.getElementById('payment-method').value;
+            document.getElementById('current-payment').textContent = method;
+            const feedback = document.getElementById('payment-feedback');
+            feedback.textContent = "Payment method updated!";
+            feedback.classList.add('active');
+            setTimeout(() => feedback.classList.remove('active'), 1200);
+        }
+        // Set Home as default
+        showSection('home', document.querySelector('nav a[href="#home"]'));
+    </script>
+</body>
+</html>
